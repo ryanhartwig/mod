@@ -9240,64 +9240,64 @@ $Event(99500001, Default, function() {
     GotoIf(L19, CharacterHasSpEffect(10000, 99000029));
     
 L0:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001050, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001060, ON);
     Goto(L20);
 L1:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001051, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001061, ON);
     Goto(L20);
 L2:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001052, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001062, ON);
     Goto(L20);
 L3:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001053, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001063, ON);
     Goto(L20);
 L4:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001054, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001064, ON);
     Goto(L20);
 L5:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001055, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001065, ON);
     Goto(L20);
 L6:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001056, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001066, ON);
     Goto(L20);
 L7:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001057, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001067, ON);
     Goto(L20);
 L8:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001058, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001068, ON);
     Goto(L20);
 L9:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001059, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001069, ON);
     Goto(L20);
 L10:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001070, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001080, ON);
     Goto(L20);
 L11:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001071, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001081, ON);
     Goto(L20);
 L12:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001072, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001082, ON);
     Goto(L20);
 L13:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001073, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001083, ON);
     Goto(L20);
 L14:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001074, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001084, ON);
     Goto(L20);
 L15:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001075, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001085, ON);
     Goto(L20);
 L16:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001076, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001086, ON);
     Goto(L20);
 L17:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001077, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001087, ON);
     Goto(L20);
 L18:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001078, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001088, ON);
     Goto(L20);
 L19:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001079, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001089, ON);
     Goto(L20);
 L20:
     RestartEvent();
@@ -9305,7 +9305,7 @@ L20:
 
 
 
-// PREGAME turn on corresponding flag (client)
+// PREGAME turn on corresponding flag (client) [disabled for now]
 // Turn ON corresponding flag to resync event flag to sp effect
 $Event(99500002, Default, function() {
     DisableNetworkSync();
@@ -9448,7 +9448,6 @@ L9:
     Goto(L10);
 L10:
     BatchSetEventFlags(10001060, 10001069, OFF);
-    DisplayBanner(TextBannerType.BloodyFingerVanquished);
     RestartEvent();
 });
 
