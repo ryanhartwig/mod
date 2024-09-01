@@ -192,6 +192,7 @@ $Event(0, Default, function() {
     // TESTING
     InitializeEvent(1, 10007900, 0);
     InitializeEvent(1, 10007901, 0);
+    InitializeEvent(1, 10007902, 0);
     
     // DEBUGGING RESET EVENT FLAGS
     // InitializeEvent(0, 10006973, 0);
@@ -2096,5 +2097,21 @@ L0:
     Goto(L1);
 L1:
     WaitFor(!InArea(10000, 10005692));
+    RestartEvent();
+});
+
+
+// Test effect on sp effect condition
+$Event(10007902, Default, function() {
+    DisableNetworkSync();
+    WaitFor(InArea(10000, 10005693));
+
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001070, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001071, OFF);
+    ClearSpEffect(10000, 99000020);
+    ClearSpEffect(10000, 99000101);
+  
+    
+    WaitFor(!InArea(10000, 10005693));
     RestartEvent();
 });
