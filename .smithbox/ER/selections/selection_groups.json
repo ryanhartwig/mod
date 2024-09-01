@@ -1,0 +1,18 @@
+{
+  "Resources": [
+    {
+      "Name": "asdf",
+      "SelectionGroupKeybind": -1,
+      "Tags": [
+        ""
+      ],
+      "Selection": [
+        "platform_large_1[]AEG230_331_3003",
+        "platform_large_1[]AEG230_348_3014",
+        "platform_large_1[]AEG230_348_3015",
+        "platform_large_1[]AEG230_348_3013",
+        "platform_large_1[]AEG230_348_3012"
+      ]
+    }
+  ]
+}
