@@ -8564,6 +8564,8 @@ $Event(99001001, Default, function(X0_4, X4_4) { // (interact asset id, flag max
     
     
     SetEventFlag(TargetEventFlagType.EventFlag, 10002089, ON); // activate pre-game event flag
+    
+    // Needs to happen in pregame event for every client
     BatchSetEventFlags(10002050, X4_4, OFF); // turn off all respawn points
     RandomlySetEventFlagInRange(10002050, X4_4, ON); // randomly enable next respawn area 
     
