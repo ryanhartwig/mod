@@ -9448,6 +9448,8 @@ L9:
     Goto(L10);
 L10:
     BatchSetEventFlags(10001060, 10001069, OFF);
+    DisplayBanner(TextBannerType.BloodyFingerVanquished);
+    RestartEvent();
 });
 
 
@@ -9497,4 +9499,5 @@ L9:
     Goto(L10);
 L10:
     BatchSetEventFlags(10001080, 10001089, OFF);
+    RestartEvent();
 });
