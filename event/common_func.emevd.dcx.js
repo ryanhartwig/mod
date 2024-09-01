@@ -8640,9 +8640,8 @@ L6:
 
 // Join team 1, clear team 2 sp effect
 $Event(99000000, Default, function(X0_4) { // 0_4 = team 1 area id
-    // DisableNetworkSync();
+    DisableNetworkSync();
     WaitFor(InArea(10000, X0_4));
-    GotoIf(L31, !InArea(10000, X0_4));
     
     // If the player has a team 2 sp effect, clear it and the associated event flag
     GotoIf(L0, CharacterHasSpEffect(10000, 99000020)); 
@@ -8658,43 +8657,43 @@ $Event(99000000, Default, function(X0_4) { // 0_4 = team 1 area id
     Goto(L10);
 L0:
     ClearSpEffect(10000, 99000020);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001070, OFF); 
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001080, ON); 
     Goto(L10);
 L1:
     ClearSpEffect(10000, 99000021);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001071, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001081, ON);
     Goto(L10);
 L2:
     ClearSpEffect(10000, 99000022);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001072, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001082, ON);
     Goto(L10);
 L3:
     ClearSpEffect(10000, 99000023);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001073, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001083, ON);
     Goto(L10);
 L4:
     ClearSpEffect(10000, 99000024);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001074, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001084, ON);
     Goto(L10);
 L5:
     ClearSpEffect(10000, 99000025);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001075, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001085, ON);
     Goto(L10);
 L6:
     ClearSpEffect(10000, 99000026);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001076, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001086, ON);
     Goto(L10);
 L7:
     ClearSpEffect(10000, 99000027);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001077, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001087, ON);
     Goto(L10);
 L8:
     ClearSpEffect(10000, 99000028);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001078, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001088, ON);
     Goto(L10);
 L9:
     ClearSpEffect(10000, 99000029);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001079, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001089, ON);
     Goto(L10);
     
 L10:
@@ -8765,16 +8764,13 @@ L30:
     WaitFixedTimeSeconds(1);
     WaitFor(!CharacterHasSpEffect(10000, 99000100)); // will need rework for FFA 
     RestartEvent();
-L31:
-    RestartEvent();
 });
 
 
 // Join team 2, clear team 1 sp effect
 $Event(99000001, Default, function(X0_4) { // 0_4 = team 2 area id
-    // DisableNetworkSync();
+    DisableNetworkSync();
     WaitFor(InArea(10000, X0_4));
-    GotoIf(L31, !InArea(10000, X0_4));
     
     // If the player has a team 1 sp effect, clear it and the associated event flag
     GotoIf(L0, CharacterHasSpEffect(10000, 99000000));
@@ -8790,43 +8786,43 @@ $Event(99000001, Default, function(X0_4) { // 0_4 = team 2 area id
     Goto(L10);
 L0:
     ClearSpEffect(10000, 99000000);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001050, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001060, ON);
     Goto(L10);
 L1:
     ClearSpEffect(10000, 99000001);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001051, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001061, ON);
     Goto(L10);
 L2:
     ClearSpEffect(10000, 99000002);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001052, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001062, ON);
     Goto(L10);
 L3:
     ClearSpEffect(10000, 99000003);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001053, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001063, ON);
     Goto(L10);
 L4:
     ClearSpEffect(10000, 99000004);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001054, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001064, ON);
     Goto(L10);
 L5:
     ClearSpEffect(10000, 99000005);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001055, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001065, ON);
     Goto(L10);
 L6:
     ClearSpEffect(10000, 99000006);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001056, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001066, ON);
     Goto(L10);
 L7:
     ClearSpEffect(10000, 99000007);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001057, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001067, ON);
     Goto(L10);
 L8:
     ClearSpEffect(10000, 99000008);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001058, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001068, ON);
     Goto(L10);
 L9:
     ClearSpEffect(10000, 99000009);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001059, OFF);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001069, ON);
     Goto(L10);
     
 L10:
@@ -8896,7 +8892,5 @@ L30:
     DisplayBlinkingMessageWithPriority(99000001, 1, true);
     WaitFixedTimeSeconds(1);
     WaitFor(!CharacterHasSpEffect(10000, 99000101)); // will need rework for FFA 
-    RestartEvent();
-L31:
     RestartEvent();
 });

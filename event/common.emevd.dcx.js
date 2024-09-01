@@ -81,6 +81,12 @@ $Event(0, Default, function() {
     
     // Handle pregame logic (DISABLED FOR NOW)
     // InitializeEvent(0, 99500002, 0);
+
+    
+    // Client side flag off triggers
+    InitializeEvent(0, 99501000, 0);
+    InitializeEvent(0, 99501001, 0);
+    
     
     // Handle win / loss
     InitializeEvent(0, 99500005, 0);
@@ -9390,4 +9396,105 @@ L19:
 L20:
     WaitFor(EventFlagState(OFF, TargetEventFlagType.EventFlag, 10002089));
     RestartEvent();
+});
+
+//
+// Client flag switch off triggers
+//
+
+// Team 1 Off
+$Event(99501000, Default, function() {
+    DisableNetworkSync();
+    WaitFor(AnyBatchEventFlags(10001060, 10001069));
+    GotoIf(L0, EventFlag(10001060));
+    GotoIf(L1, EventFlag(10001061));
+    GotoIf(L2, EventFlag(10001062));
+    GotoIf(L3, EventFlag(10001063));
+    GotoIf(L4, EventFlag(10001064));
+    GotoIf(L5, EventFlag(10001065));
+    GotoIf(L6, EventFlag(10001066));
+    GotoIf(L7, EventFlag(10001067));
+    GotoIf(L8, EventFlag(10001068));
+    GotoIf(L9, EventFlag(10001069));
+L0:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001050, OFF);
+    Goto(L10);
+L1:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001051, OFF);
+    Goto(L10);
+L2:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001052, OFF);
+    Goto(L10);
+L3:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001053, OFF);
+    Goto(L10);
+L4:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001054, OFF);
+    Goto(L10);
+L5:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001055, OFF);
+    Goto(L10);
+L6:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001056, OFF);
+    Goto(L10);
+L7:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001057, OFF);
+    Goto(L10);
+L8:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001058, OFF);
+    Goto(L10);
+L9:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001059, OFF);
+    Goto(L10);
+L10:
+    BatchSetEventFlags(10001060, 10001069, OFF);
+});
+
+
+// Team 2 Off 
+$Event(99501001, Default, function() {
+    DisableNetworkSync();
+    WaitFor(AnyBatchEventFlags(10001080, 10001089));
+    GotoIf(L0, EventFlag(10001080));
+    GotoIf(L1, EventFlag(10001081));
+    GotoIf(L2, EventFlag(10001082));
+    GotoIf(L3, EventFlag(10001083));
+    GotoIf(L4, EventFlag(10001084));
+    GotoIf(L5, EventFlag(10001085));
+    GotoIf(L6, EventFlag(10001086));
+    GotoIf(L7, EventFlag(10001087));
+    GotoIf(L8, EventFlag(10001088));
+    GotoIf(L9, EventFlag(10001089));
+L0:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001070, OFF);
+    Goto(L10);
+L1:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001071, OFF);
+    Goto(L10);
+L2:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001072, OFF);
+    Goto(L10);
+L3:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001073, OFF);
+    Goto(L10);
+L4:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001074, OFF);
+    Goto(L10);
+L5:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001075, OFF);
+    Goto(L10);
+L6:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001076, OFF);
+    Goto(L10);
+L7:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001077, OFF);
+    Goto(L10);
+L8:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001078, OFF);
+    Goto(L10);
+L9:
+    SetEventFlag(TargetEventFlagType.EventFlag, 10001079, OFF);
+    Goto(L10);
+L10:
+    BatchSetEventFlags(10001080, 10001089, OFF);
 });

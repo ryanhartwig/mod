@@ -187,8 +187,8 @@ $Event(0, Default, function() {
     InitializeCommonEvent(0, 90005706, 10000735, 930018, 0);
     InitializeEvent(0, 10003500, 10002740);
     InitializeEvent(1, 10003500, 10002741);
-    
-    
+   
+        
     // TESTING
     InitializeEvent(1, 10007900, 0);
     InitializeEvent(1, 10007901, 0);
