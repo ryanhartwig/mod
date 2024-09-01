@@ -2072,7 +2072,7 @@ $Event(10002910, Restart, function() {
 
 // Test give sp effect
 $Event(10007900, Default, function() {
-    DisableNetworkSync();
+    // DisableNetworkSync();
     WaitFor(InArea(10000, 10005691));
     SetSpEffect(10000, 99000020);
     SetSpEffect(10000, 99000101);
@@ -2085,7 +2085,7 @@ $Event(10007900, Default, function() {
 
 // Test effect on sp effect condition
 $Event(10007901, Default, function() {
-    DisableNetworkSync();
+    // DisableNetworkSync();
     WaitFor(InArea(10000, 10005692));
     GotoIf(L0, CharacterHasSpEffect(10000, 99000020));
     Goto(L1);
@@ -2103,7 +2103,7 @@ L1:
 
 // Test effect on sp effect condition
 $Event(10007902, Default, function() {
-    DisableNetworkSync();
+    // DisableNetworkSync();
     WaitFor(InArea(10000, 10005693));
 
     SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001070, OFF);
