@@ -8640,8 +8640,9 @@ L6:
 
 // Join team 1, clear team 2 sp effect
 $Event(99000000, Default, function(X0_4) { // 0_4 = team 1 area id
-    DisableNetworkSync();
+    // DisableNetworkSync();
     WaitFor(InArea(10000, X0_4));
+    RestartIf(!InArea(10000, X0_4));
     
     // If the player has a team 2 sp effect, clear it and the associated event flag
     GotoIf(L0, CharacterHasSpEffect(10000, 99000020)); 
@@ -8769,8 +8770,9 @@ L30:
 
 // Join team 2, clear team 1 sp effect
 $Event(99000001, Default, function(X0_4) { // 0_4 = team 2 area id
-    DisableNetworkSync();
+    // DisableNetworkSync();
     WaitFor(InArea(10000, X0_4));
+    RestartIf(!InArea(10000, X0_4));
     
     // If the player has a team 1 sp effect, clear it and the associated event flag
     GotoIf(L0, CharacterHasSpEffect(10000, 99000000));
