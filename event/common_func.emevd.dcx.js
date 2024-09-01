@@ -8642,6 +8642,7 @@ L6:
 $Event(99000000, Default, function(X0_4) { // 0_4 = team 1 area id
     // DisableNetworkSync();
     WaitFor(InArea(10000, X0_4));
+    GotoIf(L31, !InArea(10000, X0_4));
     
     // If the player has a team 2 sp effect, clear it and the associated event flag
     GotoIf(L0, CharacterHasSpEffect(10000, 99000020)); 
@@ -8764,6 +8765,8 @@ L30:
     WaitFixedTimeSeconds(1);
     WaitFor(!CharacterHasSpEffect(10000, 99000100)); // will need rework for FFA 
     RestartEvent();
+L31:
+    RestartEvent();
 });
 
 
@@ -8771,6 +8774,7 @@ L30:
 $Event(99000001, Default, function(X0_4) { // 0_4 = team 2 area id
     // DisableNetworkSync();
     WaitFor(InArea(10000, X0_4));
+    GotoIf(L31, !InArea(10000, X0_4));
     
     // If the player has a team 1 sp effect, clear it and the associated event flag
     GotoIf(L0, CharacterHasSpEffect(10000, 99000000));
@@ -8892,5 +8896,7 @@ L30:
     DisplayBlinkingMessageWithPriority(99000001, 1, true);
     WaitFixedTimeSeconds(1);
     WaitFor(!CharacterHasSpEffect(10000, 99000101)); // will need rework for FFA 
+    RestartEvent();
+L31:
     RestartEvent();
 });
