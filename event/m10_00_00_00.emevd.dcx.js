@@ -7,6 +7,43 @@
 // @version    3.4.2
 // ==/EMEVD==
 
+// Global Variables [Have to sync manually between files]
+const Events = {
+    JOIN_TEAM_1: 99009000,
+    JOIN_TEAM_2: 99009001,
+    HANDLE_PLAYER_DEATH: 99009002,
+    SET_LIVES_COUNT: 99001000,
+    START_MATCH: 99001001, 
+    HANDLE_PREGAME: 99501001,
+}
+const flags = {
+    respawn: {
+        area_0: 10002040,
+        area_1: 10002041,
+        area_2: 10002042,
+        area_3: 10002043,
+        area_4: 10002044,
+    },
+}
+
+// Local Variables
+const Entities = {
+    Team_1_Join: 10005000,
+    Team_1_Spawn: 10009990,
+    Team_2_Join: 10005001,
+    Team_2_Spawn: 10009991,
+    Death_Fall_Trigger: 10009970,
+    Arena_Exit_Area: 10009960,
+    Respawn_Area_0: 10009950,
+    Respawn_Area_1: 10009951,
+    Respawn_Area_2: 10009952,
+    Respawn_Area_3: 10009953,
+    Respawn_Area_4: 10009954,
+    Cycle_Lives_Statue: 10001000,
+    Start_Match_Statue: 10001001,
+}
+
+
 $Event(0, Default, function() {
     RegisterBonfire(10000002, 10001952, 0, 0, 0, 5);
     RegisterBonfire(10000003, 10001953, 0, 0, 0, 5);
@@ -187,35 +224,20 @@ $Event(0, Default, function() {
     InitializeCommonEvent(0, 90005706, 10000735, 930018, 0);
     InitializeEvent(0, 10003500, 10002740);
     InitializeEvent(1, 10003500, 10002741);
-   
-        
-    // TESTING
-    InitializeEvent(1, 10007900, 0);
-    InitializeEvent(1, 10007901, 0);
-    InitializeEvent(1, 10007902, 0);
     
-    // DEBUGGING RESET EVENT FLAGS
-    // InitializeEvent(0, 10006973, 0);
-    
-    
-    // Respawn on death [needs to implement life count]
-    // InitializeEvent(0, 10006972, 0);
 
+    // General
+    InitializeCommonEvent(0, Events.JOIN_TEAM_1, Entities.Team_1_Join); 
+    InitializeCommonEvent(0, Events.JOIN_TEAM_2, Entities.Team_2_Join); 
     
-    // Join teams
-    InitializeCommonEvent(0, 99000000, 10005000); // 1
-    InitializeCommonEvent(0, 99000001, 10005001); // 2
+    // Handle death
+    // args= (areaId to trigger death, tp on permadeath, maxRespawnFlag, ...respawn area ids [currently max 5. fully scalable])
+    InitializeCommonEvent(0, Events.HANDLE_PLAYER_DEATH, Entities.Death_Fall_Trigger, Entities.Arena_Exit_Area, flags.respawn.area_4, Entities.Respawn_Area_0, Entities.Respawn_Area_1, Entities.Respawn_Area_2, Entities.Respawn_Area_3, Entities.Respawn_Area_4);
     
-    
-    // Automatically decrement client life count on death
-    
-    InitializeCommonEvent(0, 99000002, 10009970, 10009960, 10002054, 10009950, 10009951, 10009952, 10009953, 10009954);
-    
-    
-    // SETTINGS / ACTIONS
-    InitializeCommonEvent(0, 99001000, 10001000); // Cycle life count
-    InitializeCommonEvent(0, 99001001, 10001001, 10002054); // Start match
-    InitializeCommonEvent(0, 99501001, 10009990, 10009991); // Area id of spawn locations (team 1 and 2)
+    // Settings & Actions
+    InitializeCommonEvent(0, Events.SET_LIVES_COUNT, Entities.Cycle_Lives_Statue); // Cycle life count
+    InitializeCommonEvent(0, Events.START_MATCH, Entities.Start_Match_Statue, flags.respawn.area_4); // Start match (interact asset ID, respawn flag max)
+    InitializeCommonEvent(0, Events.HANDLE_PREGAME, Entities.Team_1_Spawn, Entities.Team_2_Spawn); // Area id of spawn locations (team 1 and 2)
 });
 
 $Event(50, Default, function() {
@@ -2055,63 +2077,4 @@ $Event(10002910, Restart, function() {
     EndIf(EventFlag(10000800));
     WaitFor(EventFlag(10002160));
     DisableHit(10004910);
-});
-
-
-// Warp char on death
-//$Event(10006972, Default, function() {
-    //DisableNetworkSync();
-    //WaitFor(CharacterHPValue(10000) == 0);
-    //SetPlayerRespawnPoint(10009111);
-    //WaitFixedTimeSeconds(2);
-    //WarpCharacterAndCopyFloor(10000, TargetEntityType.Area, 10006972, -1, 10000);
-    //WaitFixedTimeSeconds(4);
-    //RestartEvent();
-//});
-
-
-// Test give sp effect
-$Event(10007900, Default, function() {
-    // DisableNetworkSync();
-    WaitFor(InArea(10000, 10005691));
-    SetSpEffect(10000, 99000020);
-    SetSpEffect(10000, 99000101);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001070, ON);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001071, OFF);
-    
-    WaitFor(!InArea(10000, 10005691));
-    RestartEvent();
-});
-
-// Test effect on sp effect condition
-$Event(10007901, Default, function() {
-    // DisableNetworkSync();
-    WaitFor(InArea(10000, 10005692));
-    GotoIf(L0, CharacterHasSpEffect(10000, 99000020));
-    Goto(L1);
-L0: 
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001070, OFF);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001071, ON);
-    ClearSpEffect(10000, 99000020);
-    ClearSpEffect(10000, 99000101);
-    Goto(L1);
-L1:
-    WaitFor(!InArea(10000, 10005692));
-    RestartEvent();
-});
-
-
-// Test effect on sp effect condition
-$Event(10007902, Default, function() {
-    // DisableNetworkSync();
-    WaitFor(InArea(10000, 10005693));
-
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001070, OFF);
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001071, OFF);
-    ClearSpEffect(10000, 99000020);
-    ClearSpEffect(10000, 99000101);
-  
-    
-    WaitFor(!InArea(10000, 10005693));
-    RestartEvent();
 });

@@ -7,6 +7,142 @@
 // @version    3.4.2
 // ==/EMEVD==
 
+// GLOBAL [must manually sync]
+const flags = {
+    game_state: {
+        pregame: 10002089,
+        in_progress: 10002090,
+    },
+    settings: {
+        lives: {
+            one: 10001000,
+            three: 10001001,
+            five: 10001002,
+        }
+    },
+    respawn: {
+        area_0: 10002050,
+        area_1: 10002051,
+        area_2: 10002052,
+        area_3: 10002053,
+        area_4: 10002054,
+    },
+    teamSlots: {
+        team_1: {
+            slot_0: 10002250,
+            slot_1: 10002251,
+            slot_2: 10002252,
+            slot_3: 10002253,
+            slot_4: 10002254,
+            slot_5: 10002255,
+            slot_6: 10002256,
+            slot_7: 10002257,
+            slot_8: 10002258,
+            slot_9: 10002259,
+            // Turns the corresponding slot off on the client (in common func). We can only transmit ON (true) flags between clients. 
+            slot_0_network_off: 10002260,
+            slot_1_network_off: 10002261,
+            slot_2_network_off: 10002262,
+            slot_3_network_off: 10002263,
+            slot_4_network_off: 10002264,
+            slot_5_network_off: 10002265,
+            slot_6_network_off: 10002266,
+            slot_7_network_off: 10002267,
+            slot_8_network_off: 10002268,
+            slot_9_network_off: 10002269,
+        },
+        team_2: {
+            slot_0: 10002270,
+            slot_1: 10002271,
+            slot_2: 10002272,
+            slot_3: 10002273,
+            slot_4: 10002274,
+            slot_5: 10002275,
+            slot_6: 10002276,
+            slot_7: 10002277,
+            slot_8: 10002278,
+            slot_9: 10002279,
+            slot_0_network_off: 10002280,
+            slot_1_network_off: 10002281,
+            slot_2_network_off: 10002282,
+            slot_3_network_off: 10002283,
+            slot_4_network_off: 10002284,
+            slot_5_network_off: 10002285,
+            slot_6_network_off: 10002286,
+            slot_7_network_off: 10002287,
+            slot_8_network_off: 10002288,
+            slot_9_network_off: 10002289,
+        }
+    },
+};
+
+const spEffects = {
+    other: {
+        prevent_death: 46000100,
+    },
+    lives_remaining: {
+        one: 99000040,
+        two: 99000041,
+        three: 99000042,
+        four: 99000043,
+        five: 99000044,
+    },
+    teamSlots: {
+        team_1: {
+            team_effect: 99000100,
+            slot_0: 99000000,
+            slot_1: 99000001,
+            slot_2: 99000002,
+            slot_3: 99000003,
+            slot_4: 99000004,
+            slot_5: 99000005,
+            slot_6: 99000006,
+            slot_7: 99000007,
+            slot_8: 99000008,
+            slot_9: 99000009,
+        },
+        team_2: {
+            team_effect: 99000101,
+            slot_0: 99000020,
+            slot_1: 99000021,
+            slot_2: 99000022,
+            slot_3: 99000023,
+            slot_4: 99000024,
+            slot_5: 99000025,
+            slot_6: 99000026,
+            slot_7: 99000027,
+            slot_8: 99000028,
+            slot_9: 99000029,
+        },
+    }
+};
+
+const messages = {
+    setting_one_life: 99001000,
+    setting_three_lives: 99001001,
+    setting_five_lives: 99001002,
+    joined_team_one: 99000000,
+    joined_team_two: 99000001,
+    match_starting: 99001010,
+};
+
+const items = {
+    rowa_fruit: 997200,
+}
+
+
+// LOCAL 
+const CommonEvents = {
+    HANDLE_SOFT_DEATH: 46008102,
+    HANDLE_HARD_DEATH: 99500001,
+    INIT_LIFE_SETTING: 99500000,
+    HANDLE_WIN_LOSS: 99500005,
+    NETWORK_OFF: {
+        TEAM_1: 99501000,
+        TEAM_2: 99501001,
+    }
+}
+
 $Event(0, Default, function() {
     InitializeEvent(0, 701, 0);
     InitializeEvent(0, 707, 0);
@@ -69,32 +205,18 @@ $Event(0, Default, function() {
     InitializeEvent(4, 1630, 62008, 62050, 62051, 0, 0, 0, 0, 0, 0);
     InitializeEvent(5, 1630, 62009, 62050, 62052, 0, 0, 0, 0, 0, 0);
     
-    // Respawn player on death
-    InitializeEvent(0, 46008102, 0);
-    InitializeEvent(0, 46008002, 0);
-    
-    // Init default arena respawn event flag if none are active
-    InitializeEvent(0, 99500000, 0);
-    
-    // Handle perma death 
-    InitializeEvent(0, 99500001, 0);
-    
-    // Handle pregame logic (DISABLED FOR NOW)
-    // InitializeEvent(0, 99500002, 0);
+    // Handlers
+    InitializeEvent(0, CommonEvents.HANDLE_SOFT_DEATH, 0);
+    InitializeEvent(0, CommonEvents.HANDLE_HARD_DEATH, 0);
+    InitializeEvent(0, CommonEvents.HANDLE_WIN_LOSS, 0);
 
+    // Init 
+    InitializeEvent(0, CommonEvents.INIT_LIFE_SETTING, 0);
     
-    // Client side flag off triggers
-    InitializeEvent(0, 99501000, 0);
-    InitializeEvent(0, 99501001, 0);
+    // Network-connected "OFF" flag state functions.
+    InitializeEvent(0, CommonEvents.NETWORK_OFF.TEAM_1, 0);
+    InitializeEvent(0, CommonEvents.NETWORK_OFF.TEAM_2, 0);
     
-    
-    // Handle win / loss
-    InitializeEvent(0, 99500005, 0);
-    
-    
-    // Debug turn off
-    InitializeEvent(0, 99006973, 0);
-
     
     EndIf(!PlayerIsInOwnWorld());
     EndIf(EventFlag(2052));
@@ -9090,8 +9212,8 @@ $Event(9950, Default, function(X0_4, X4_4) {
 });
 
 
-// These 2 events handle respawn on death
-$Event(46008102, Restart, function() {
+// Handle respawn on death (from sp effect)
+$Event(CommonEvents.HANDLE_SOFT_DEATH, Restart, function() {
     DisableNetworkSync();
     WaitFor(CharacterHasSpEffect(10000, 46000100));
     SetSpEffect(10000, 1673000);
@@ -9135,59 +9257,37 @@ $Event(46008102, Restart, function() {
     WaitFixedTimeRealFrames(5);
     RestartEvent();
 });
-// Moved to common_func for when player dies or falls
-//$Event(46008002, Restart, function() {
-    //DisableNetworkSync();
-    //WaitFor(PlayerIsInOwnWorld() && CharacterHPValue(10000) == 0);
-    //EnableCharacterInvincibility(10000);
-    //WaitFixedTimeSeconds(0.2);
-    //ShootBullet(10000, 10000, 905, 46000100, 0, -1, 0);
-    //SetSpEffect(10000, 46000100);
-    //ClearSpEffect(10000, 70);
-    //WaitFixedTimeRealFrames(3);
-    //ForceAnimationPlayback(10000, 60502, false, false, false);
-    //WaitFixedTimeSeconds(1);
-    //DisableCharacterInvincibility(10000);
-    //RestartEvent();
-//});
-
 
 // Initialize arena life count setting flag
-$Event(99500000, Default, function() {
-    EndIf(AnyBatchEventFlags(10009000, 10009002));
-    SetEventFlag(TargetEventFlagType.EventFlag, 10009001, ON); 
+$Event(CommonEvents.INIT_LIFE_SETTING, Default, function() {
+    EndIf(AnyBatchEventFlags(flags.settings.lives.one, flags.settings.lives.five)); // range 1-3
+    SetEventFlag(TargetEventFlagType.EventFlag, flags.settings.lives.three, ON); 
 });
 
-// turn off all team flags
-$Event(99006973, Default, function() {
+// Handle TDM match end
+$Event(CommonEvents.HANDLE_WIN_LOSS, Default, function() {
     DisableNetworkSync();
-    BatchSetEventFlags(10001050, 10001079, OFF); 
-    // TESTING ONLY
-    // SetEventFlag(TargetEventFlagType.EventFlag, 10001075, ON);
-});
+    WaitFor(EventFlag(flags.game_state.in_progress)); 
 
-
-// win / loss AKA GAME END
-$Event(99500005, Default, function() {
-    DisableNetworkSync();
-    WaitFor(EventFlag(10002090)); // game is active
+    const { teamSlots: { team_1, team_2, } } = flags;
+    
     WaitFor(
-        BatchEventFlagsState(LogicalOperationType.AllOFF, TargetEventFlagType.EventFlag, 10001050, 10001059) || 
-        BatchEventFlagsState(LogicalOperationType.AllOFF, TargetEventFlagType.EventFlag, 10001070, 10001079)
+        BatchEventFlagsState(LogicalOperationType.AllOFF, TargetEventFlagType.EventFlag, team_1.slot_0, team_1.slot_9) || 
+        BatchEventFlagsState(LogicalOperationType.AllOFF, TargetEventFlagType.EventFlag, team_2.slot_0, team_2.slot_9)
     );
-    SetEventFlag(TargetEventFlagType.EventFlag, 10002090, OFF); // set game progress flag off
+    SetEventFlag(TargetEventFlagType.EventFlag, flags.game_state.in_progress, OFF); // each client sets this so no need to sync
     WaitFixedTimeSeconds(2);
-    GotoIf(L0, BatchEventFlagsState(LogicalOperationType.AllOFF, TargetEventFlagType.EventFlag, 10001050, 10001059));
-    GotoIf(L1, BatchEventFlagsState(LogicalOperationType.AllOFF, TargetEventFlagType.EventFlag, 10001070, 10001079));
+    GotoIf(L0, BatchEventFlagsState(LogicalOperationType.AllOFF, TargetEventFlagType.EventFlag, team_1.slot_0, team_1.slot_9));
+    GotoIf(L1, BatchEventFlagsState(LogicalOperationType.AllOFF, TargetEventFlagType.EventFlag, team_2.slot_0, team_2.slot_9));
     Goto(L20);
 L0:
     // Team 1 loss
-    GotoIf(L11, CharacterHasSpEffect(10000, 99000100)); // t1
-    GotoIf(L10, CharacterHasSpEffect(10000, 99000101)); // t2
+    GotoIf(L11, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.team_effect)); // t1
+    GotoIf(L10, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.team_effect)); // t2
 L1:
     // Team 2 loss
-    GotoIf(L10, CharacterHasSpEffect(10000, 99000100)); // t1
-    GotoIf(L11, CharacterHasSpEffect(10000, 99000101)); // t2
+    GotoIf(L10, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.team_effect)); // t1
+    GotoIf(L11, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.team_effect)); // t2
 L10: 
     // Show win message
     DisplayBanner(TextBannerType.Victory);
@@ -9197,11 +9297,11 @@ L11:
     DisplayBanner(TextBannerType.Defeat);
     Goto(L15);
 L15:
-    ClearSpEffect(10000, 99000040);
-    ClearSpEffect(10000, 99000041);
-    ClearSpEffect(10000, 99000042);
-    ClearSpEffect(10000, 99000043);
-    ClearSpEffect(10000, 99000044);
+    ClearSpEffect(10000, spEffects.lives_remaining.one);
+    ClearSpEffect(10000, spEffects.lives_remaining.two);
+    ClearSpEffect(10000, spEffects.lives_remaining.three);
+    ClearSpEffect(10000, spEffects.lives_remaining.four);
+    ClearSpEffect(10000, spEffects.lives_remaining.five);
     WarpCharacterAndCopyFloor(10000, TargetEntityType.Area, 10009960, -1, 10000);
     Goto(L20);
 L20:
@@ -9210,293 +9310,207 @@ L20:
 
 
 // Turn off corresponding flag if player dies
-$Event(99500001, Default, function() {
+$Event(CommonEvents.HANDLE_HARD_DEATH, Default, function() {
     DisableNetworkSync();
-    WaitFor(CharacterHasSpEffect(10000, 99000040));
-    WaitFor(!CharacterHasSpEffect(10000, 99000040));
-    RestartIf(EventFlagState(OFF, TargetEventFlagType.EventFlag, 10002090));
+    WaitFor(CharacterHasSpEffect(10000, spEffects.lives_remaining.one));
+    WaitFor(!CharacterHasSpEffect(10000, spEffects.lives_remaining.one));
+    RestartIf(EventFlagState(OFF, TargetEventFlagType.EventFlag, flags.game_state.in_progress));
     
-    AwardItemLot(997200);
+    AwardItemLot(items.rowa_fruit);
+
+    const { teamSlots: { team_1, team_2, }} = flags; 
     
-    GotoIf(L0, CharacterHasSpEffect(10000, 99000000));
-    GotoIf(L1, CharacterHasSpEffect(10000, 99000001));
-    GotoIf(L2, CharacterHasSpEffect(10000, 99000002));
-    GotoIf(L3, CharacterHasSpEffect(10000, 99000003));
-    GotoIf(L4, CharacterHasSpEffect(10000, 99000004));
-    GotoIf(L5, CharacterHasSpEffect(10000, 99000005));
-    GotoIf(L6, CharacterHasSpEffect(10000, 99000006));
-    GotoIf(L7, CharacterHasSpEffect(10000, 99000007));
-    GotoIf(L8, CharacterHasSpEffect(10000, 99000008));
-    GotoIf(L9, CharacterHasSpEffect(10000, 99000009));
-    GotoIf(L10, CharacterHasSpEffect(10000, 99000020));
-    GotoIf(L11, CharacterHasSpEffect(10000, 99000021));
-    GotoIf(L12, CharacterHasSpEffect(10000, 99000022));
-    GotoIf(L13, CharacterHasSpEffect(10000, 99000023));
-    GotoIf(L14, CharacterHasSpEffect(10000, 99000024));
-    GotoIf(L15, CharacterHasSpEffect(10000, 99000025));
-    GotoIf(L16, CharacterHasSpEffect(10000, 99000026));
-    GotoIf(L17, CharacterHasSpEffect(10000, 99000027));
-    GotoIf(L18, CharacterHasSpEffect(10000, 99000028));
-    GotoIf(L19, CharacterHasSpEffect(10000, 99000029));
+    GotoIf(L0, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_0));
+    GotoIf(L1, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_1));
+    GotoIf(L2, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_2));
+    GotoIf(L3, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_3));
+    GotoIf(L4, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_4));
+    GotoIf(L5, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_5));
+    GotoIf(L6, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_6));
+    GotoIf(L7, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_7));
+    GotoIf(L8, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_8));
+    GotoIf(L9, CharacterHasSpEffect(10000, spEffects.teamSlots.team_1.slot_9));
+    GotoIf(L10, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_0));
+    GotoIf(L11, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_1));
+    GotoIf(L12, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_2));
+    GotoIf(L13, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_3));
+    GotoIf(L14, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_4));
+    GotoIf(L15, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_5));
+    GotoIf(L16, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_6));
+    GotoIf(L17, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_7));
+    GotoIf(L18, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_8));
+    GotoIf(L19, CharacterHasSpEffect(10000, spEffects.teamSlots.team_2.slot_9));
     
 L0:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001060, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_0_network_off, ON);
     Goto(L20);
 L1:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001061, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_1_network_off, ON);
     Goto(L20);
 L2:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001062, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_2_network_off, ON);
     Goto(L20);
 L3:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001063, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_3_network_off, ON);
     Goto(L20);
 L4:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001064, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_4_network_off, ON);
     Goto(L20);
 L5:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001065, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_5_network_off, ON);
     Goto(L20);
 L6:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001066, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_6_network_off, ON);
     Goto(L20);
 L7:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001067, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_7_network_off, ON);
     Goto(L20);
 L8:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001068, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_8_network_off, ON);
     Goto(L20);
 L9:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001069, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_1.slot_9_network_off, ON);
     Goto(L20);
 L10:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001080, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_0_network_off, ON);
     Goto(L20);
 L11:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001081, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_1_network_off, ON);
     Goto(L20);
 L12:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001082, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_2_network_off, ON);
     Goto(L20);
 L13:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001083, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_3_network_off, ON);
     Goto(L20);
 L14:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001084, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_4_network_off, ON);
     Goto(L20);
 L15:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001085, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_5_network_off, ON);
     Goto(L20);
 L16:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001086, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_6_network_off, ON);
     Goto(L20);
 L17:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001087, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_7_network_off, ON);
     Goto(L20);
 L18:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001088, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_8_network_off, ON);
     Goto(L20);
 L19:
-    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, 10001089, ON);
+    SetNetworkconnectedEventFlag(TargetEventFlagType.EventFlag, team_2.slot_9_network_off, ON);
     Goto(L20);
 L20:
     RestartEvent();
 });
 
-
-
-// PREGAME turn on corresponding flag (client) [disabled for now]
-// Turn ON corresponding flag to resync event flag to sp effect
-$Event(99500002, Default, function() {
-    DisableNetworkSync();
-    WaitFor(EventFlag(10002089)); // Is pregame event flag active
-    
-    GotoIf(L0, CharacterHasSpEffect(10000, 99000000));
-    GotoIf(L1, CharacterHasSpEffect(10000, 99000001));
-    GotoIf(L2, CharacterHasSpEffect(10000, 99000002));
-    GotoIf(L3, CharacterHasSpEffect(10000, 99000003));
-    GotoIf(L4, CharacterHasSpEffect(10000, 99000004));
-    GotoIf(L5, CharacterHasSpEffect(10000, 99000005));
-    GotoIf(L6, CharacterHasSpEffect(10000, 99000006));
-    GotoIf(L7, CharacterHasSpEffect(10000, 99000007));
-    GotoIf(L8, CharacterHasSpEffect(10000, 99000008));
-    GotoIf(L9, CharacterHasSpEffect(10000, 99000009));
-    GotoIf(L10, CharacterHasSpEffect(10000, 99000020));
-    GotoIf(L11, CharacterHasSpEffect(10000, 99000021));
-    GotoIf(L12, CharacterHasSpEffect(10000, 99000022));
-    GotoIf(L13, CharacterHasSpEffect(10000, 99000023));
-    GotoIf(L14, CharacterHasSpEffect(10000, 99000024));
-    GotoIf(L15, CharacterHasSpEffect(10000, 99000025));
-    GotoIf(L16, CharacterHasSpEffect(10000, 99000026));
-    GotoIf(L17, CharacterHasSpEffect(10000, 99000027));
-    GotoIf(L18, CharacterHasSpEffect(10000, 99000028));
-    GotoIf(L19, CharacterHasSpEffect(10000, 99000029));
-    Goto(L20);
-L0:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001050, ON);
-    AwardItemLot(997200);
-    Goto(L20);
-L1:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001051, ON);
-    Goto(L20);
-L2:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001052, ON);
-    Goto(L20);
-L3:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001053, ON);
-    Goto(L20);
-L4:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001054, ON);
-    Goto(L20);
-L5:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001055, ON);
-    Goto(L20);
-L6:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001056, ON);
-    Goto(L20);
-L7:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001057, ON);
-    Goto(L20);
-L8:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001058, ON);
-    Goto(L20);
-L9:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001059, ON);
-    Goto(L20);
-L10:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001070, ON);
-    Goto(L20);
-L11:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001071, ON);
-    Goto(L20);
-L12:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001072, ON);
-    Goto(L20);
-L13:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001073, ON);
-    Goto(L20);
-L14:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001074, ON);
-    Goto(L20);
-L15:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001075, ON);
-    Goto(L20);
-L16:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001076, ON);
-    Goto(L20);
-L17:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001077, ON);
-    Goto(L20);
-L18:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001078, ON);
-    Goto(L20);
-L19:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001079, ON);
-    Goto(L20);
-L20:
-    WaitFor(EventFlagState(OFF, TargetEventFlagType.EventFlag, 10002089));
-    RestartEvent();
-});
 
 //
 // Client flag switch off triggers
 //
 
 // Team 1 Off
-$Event(99501000, Default, function() {
+$Event(CommonEvents.NETWORK_OFF.TEAM_1, Default, function() {
     DisableNetworkSync();
-    WaitFor(AnyBatchEventFlags(10001060, 10001069));
-    GotoIf(L0, EventFlag(10001060));
-    GotoIf(L1, EventFlag(10001061));
-    GotoIf(L2, EventFlag(10001062));
-    GotoIf(L3, EventFlag(10001063));
-    GotoIf(L4, EventFlag(10001064));
-    GotoIf(L5, EventFlag(10001065));
-    GotoIf(L6, EventFlag(10001066));
-    GotoIf(L7, EventFlag(10001067));
-    GotoIf(L8, EventFlag(10001068));
-    GotoIf(L9, EventFlag(10001069));
+
+    const { teamSlots: { team_1 } } = flags;
+    
+    WaitFor(AnyBatchEventFlags(team_1.slot_0_network_off, team_1.slot_9_network_off));
+    GotoIf(L0, EventFlag(team_1.slot_0_network_off));
+    GotoIf(L1, EventFlag(team_1.slot_1_network_off));
+    GotoIf(L2, EventFlag(team_1.slot_2_network_off));
+    GotoIf(L3, EventFlag(team_1.slot_3_network_off));
+    GotoIf(L4, EventFlag(team_1.slot_4_network_off));
+    GotoIf(L5, EventFlag(team_1.slot_5_network_off));
+    GotoIf(L6, EventFlag(team_1.slot_6_network_off));
+    GotoIf(L7, EventFlag(team_1.slot_7_network_off));
+    GotoIf(L8, EventFlag(team_1.slot_8_network_off));
+    GotoIf(L9, EventFlag(team_1.slot_9_network_off));
 L0:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001050, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_0, OFF);
     Goto(L10);
 L1:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001051, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_1, OFF);
     Goto(L10);
 L2:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001052, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_2, OFF);
     Goto(L10);
 L3:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001053, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_3, OFF);
     Goto(L10);
 L4:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001054, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_4, OFF);
     Goto(L10);
 L5:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001055, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_5, OFF);
     Goto(L10);
 L6:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001056, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_6, OFF);
     Goto(L10);
 L7:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001057, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_7, OFF);
     Goto(L10);
 L8:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001058, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_8, OFF);
     Goto(L10);
 L9:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001059, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_1.slot_9, OFF);
     Goto(L10);
 L10:
-    BatchSetEventFlags(10001060, 10001069, OFF);
+    BatchSetEventFlags(team_1.slot_0_network_off, team_1.slot_9_network_off, OFF);
     RestartEvent();
 });
 
 
 // Team 2 Off 
-$Event(99501001, Default, function() {
+$Event(CommonEvents.NETWORK_OFF.TEAM_2, Default, function() {
     DisableNetworkSync();
-    WaitFor(AnyBatchEventFlags(10001080, 10001089));
-    GotoIf(L0, EventFlag(10001080));
-    GotoIf(L1, EventFlag(10001081));
-    GotoIf(L2, EventFlag(10001082));
-    GotoIf(L3, EventFlag(10001083));
-    GotoIf(L4, EventFlag(10001084));
-    GotoIf(L5, EventFlag(10001085));
-    GotoIf(L6, EventFlag(10001086));
-    GotoIf(L7, EventFlag(10001087));
-    GotoIf(L8, EventFlag(10001088));
-    GotoIf(L9, EventFlag(10001089));
+
+    const { teamSlots: { team_2 } } = flags;
+
+    WaitFor(AnyBatchEventFlags(team_2.slot_0_network_off, team_2.slot_9_network_off));
+    GotoIf(L0, EventFlag(team_2.slot_0_network_off));
+    GotoIf(L1, EventFlag(team_2.slot_1_network_off));
+    GotoIf(L2, EventFlag(team_2.slot_2_network_off));
+    GotoIf(L3, EventFlag(team_2.slot_3_network_off));
+    GotoIf(L4, EventFlag(team_2.slot_4_network_off));
+    GotoIf(L5, EventFlag(team_2.slot_5_network_off));
+    GotoIf(L6, EventFlag(team_2.slot_6_network_off));
+    GotoIf(L7, EventFlag(team_2.slot_7_network_off));
+    GotoIf(L8, EventFlag(team_2.slot_8_network_off));
+    GotoIf(L9, EventFlag(team_2.slot_9_network_off));
 L0:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001070, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_0, OFF);
     Goto(L10);
 L1:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001071, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_1, OFF);
     Goto(L10);
 L2:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001072, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_2, OFF);
     Goto(L10);
 L3:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001073, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_3, OFF);
     Goto(L10);
 L4:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001074, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_4, OFF);
     Goto(L10);
 L5:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001075, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_5, OFF);
     Goto(L10);
 L6:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001076, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_6, OFF);
     Goto(L10);
 L7:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001077, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_7, OFF);
     Goto(L10);
 L8:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001078, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_8, OFF);
     Goto(L10);
 L9:
-    SetEventFlag(TargetEventFlagType.EventFlag, 10001079, OFF);
+    SetEventFlag(TargetEventFlagType.EventFlag, team_2.slot_9, OFF);
     Goto(L10);
 L10:
-    BatchSetEventFlags(10001080, 10001089, OFF);
+    BatchSetEventFlags(team_2.slot_0_network_off, team_2.slot_9_network_off, OFF);
     RestartEvent();
 });
